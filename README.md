@@ -18,11 +18,12 @@ So that I can organize my thoughts and keep track of tasks I need to complete
 
 * ITS done when the Save button is clicked and the new note is then saved and appears in the left-hand column where other existing notes are and the buttons in the navigation bar disappear
 
-* ITS done when the user clicks an existing note from the list on the left-hand column and the note appears in teh right-hand column and a "New NOte" button appearings in the navigation 
+* ITS done when the user clicks an existing note from the list on the left-hand column and the note appears in teh right-hand column and a "New Note" button appearings in the navigation 
 
 * ITS done when the user clicks a "New Note" button in the navigation at the top of thepage and are presented with empty fields to enter a new note title and text in the right-hand column and the button disappears
 
 ## Description
 
+This application allows the user to have a collection of notes that are 
 
 ## Images
