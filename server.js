@@ -1,56 +1,60 @@
 
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
+const clog = require('./middleware/clog.js');
+const fs = require('./helpers/fsUtils');
+const apiRoutes = require('./routes/notes.js');
+const htmlRoutes = require('./routes/htmlRoutes.js');
 
-
-const app = express();
 const PORT = process.env.PORT || 3001;
 
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-}
+app.use('/api', apiRoutes);
+app.use('/', htmlRoutes);
+
+app.listen(PORT, () =>
+    console.log(`App listening at http://localhost:${PORT} 🚀`)
+    );
+
+app.get('/', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/notes.html'));
-}
+app.get('/notes', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-app.post('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/notes.html'));
+app.get('*', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+);
+
+app.post('/api/notes', (req, res) => {
+    fs.readAndAppend(req.body, './db/db.json');
+    res.json('Note added');
 }
 );
 
 app.get('/api/notes', (req, res) => {
-    const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db/db.json')));
-    res.json(notes);
-}
-);
-
-app.post('/api/notes', (req, res) => {
-    const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db/db.json')));
-    const newNote = req.body;
-    notes.push(newNote);
-    fs.writeFileSync(path.join(__dirname, 'db/db.json'), JSON.stringify(notes));
-    res.json(newNote);
+    fs.readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 }
 );
 
 app.delete('/api/notes/:id', (req, res) => {
-    const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db/db.json')));
-    const noteId = req.params.id;
-    const newNotes = notes.filter(note => note.id !== noteId);
-    fs.writeFileSync(path.join(__dirname, 'db/db.json'), JSON.stringify(newNotes));
-    res.json(newNotes);
+    fs.readFromFile('./db/db.json')
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            const newJson = json.filter((note) => note.id !== req.params.id);
+            fs.writeToFile('./db/db.json', newJson);
+            res.json('Note deleted');
+        });
 }
 );
 
 
-app.listen(PORT, () => {
-    console.log(`Example app listening at http://localhost:${PORT}`);
-}
-);
+module.exports = app;
 
