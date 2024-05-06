@@ -1,3 +1,22 @@
+const express = require('express');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/notes.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`App listening on PORT ${PORT}`);
+});
+
 let noteForm;
 let noteTitle;
 let noteText;
@@ -5,9 +24,6 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-
-
-// define the window so that the functions can be used in the browser
 let window = {
     location: {
         pathname: '/notes'
@@ -58,19 +74,18 @@ let fetch = (url, options) => {
             }
         });
     });
-}
+};
 
-let clearBtn = document.querySelector('.clear-note');
 
 
 if (window.location.pathname === '/notes') {
-
-    noteForm = document.querySelector('.note-form');
-    noteTitle = document.querySelector('.note-title');
-    noteText = document.querySelector('.note-textarea');
-    saveNoteBtn = document.querySelector('.save-note');
-    newNoteBtn = document.querySelector('.new-note');
-    noteList = document.querySelectorAll('.list-container .list-group');
+  noteForm = document.querySelector('.note-form');
+  noteTitle = document.querySelector('.note-title');
+  noteText = document.querySelector('.note-textarea');
+  saveNoteBtn = document.querySelector('.save-note');
+  newNoteBtn = document.querySelector('.new-note');
+  clearBtn = document.querySelector('.clear-btn');
+  noteList = document.querySelectorAll('.list-container .list-group');
 }
 
 // Show an element
@@ -195,41 +210,28 @@ const renderNoteList = async (notes) => {
   let noteListItems = [];
 
   // Returns HTML element with or without a delete button
-  const liEl = document.createElement('li');
   const createLi = (text, delBtn = true) => {
-
-    function createElement(tagName) {
-          return document.createElement(tagName);
-      }
-
-    if (jsonNotes.length === 0) {
-        noteListItems.push(createLi('No saved Notes', false));
-    }
-
-    jsonNotes.forEach((note) => {
-        const li = createLi(note.title);
-        li.dataset.note = JSON.stringify(note);
-
-        noteListItems.push(li);
-    });
-
-    if (window.location.pathname === '/notes') {
-        noteListItems.forEach((note) => noteList[0].append(note));
-    }
-
-
-
-    // Gets notes from the db and renders them to the sidebar
-    const getAndRenderNotes = () => getNotes().then(renderNoteList);
-
-    if (window.location.pathname === '/notes') {
-        saveNoteBtn.addEventListener('click', handleNoteSave);
-        newNoteBtn.addEventListener('click', handleNewNoteView);
-        clearBtn.addEventListener('click', renderActiveNote);
-    }
-    liEl.classList.add('list-group-item');
     
-    getAndRenderNotes();
+    function createElement(tagName) {
+        return document.createElement(tagName);
+    }
+
+  if (jsonNotes.length === 0) {
+      noteListItems.push(createLi('No saved Notes', false));
+  }
+
+  jsonNotes.forEach((note) => {
+      const li = createLi(note.title);
+      li.dataset.note = JSON.stringify(note);
+
+      noteListItems.push(li);
+  });
+
+  if (window.location.pathname === '/notes') {
+      noteListItems.forEach((note) => noteList[0].append(note));
+  }
+};
+
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
     spanEl.innerText = text;
@@ -268,4 +270,16 @@ const renderNoteList = async (notes) => {
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
-};
+
+
+// Gets notes from the db and renders them to the sidebar
+const getAndRenderNotes = () => getNotes().then(renderNoteList);
+
+if (window.location.pathname === '/notes') {
+  saveNoteBtn.addEventListener('click', handleNoteSave);
+  newNoteBtn.addEventListener('click', handleNewNoteView);
+  clearBtn.addEventListener('click', renderActiveNote);
+  noteForm.addEventListener('input', handleRenderBtns);
+}
+
+getAndRenderNotes();

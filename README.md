@@ -24,6 +24,6 @@ So that I can organize my thoughts and keep track of tasks I need to complete
 
 ## Description
 
-This application allows the user to have a collection of notes that are 
+This application allows the user to have a collection of notes that are needing to be reminded of. It allows the user to add new notes as well as review previously made ones. The ones that have been previously entered can be reopened by clicking on the note tab on the left-side column
 
 ## Images
