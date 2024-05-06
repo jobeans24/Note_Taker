@@ -3,7 +3,9 @@
 ## User Story
 
 As a small business owner
+
 I want to be able to write and save notes
+
 So that I can organize my thoughts and keep track of tasks I need to complete
 
 ## Acceptance Criteria
@@ -24,6 +26,6 @@ So that I can organize my thoughts and keep track of tasks I need to complete
 
 ## Description
 
-This application allows the user to have a collection of notes that are needing to be reminded of. It allows the user to add new notes as well as review previously made ones. The ones that have been previously entered can be reopened by clicking on the note tab on the left-side column
+This application allows the user to have a collection of notes that are needing to be reminded of. It allows the user to add new notes as well as review previously made ones. The ones that have been previously entered can be reopened by clicking on the note tab on the left-side column. The note will then appear on the right-side column, there will also be a clear button that will appear int eh navigation bar and allow the user to delete/clear the information that is within the note. 
 
 ## Images

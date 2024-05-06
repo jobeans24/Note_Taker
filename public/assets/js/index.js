@@ -1,21 +1,4 @@
-const express = require('express');
-
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/notes.html'));
-});
-
-app.listen(PORT, () => {
-    console.log(`App listening on PORT ${PORT}`);
-});
+const router = require('express').Router();
 
 let noteForm;
 let noteTitle;
@@ -23,60 +6,6 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
-
-let window = {
-    location: {
-        pathname: '/notes'
-    }
-};
-
-let document = {
-    querySelector: (selector) => {
-        return {
-            style: {
-                display: 'inline'
-            },
-            addEventListener: (event, callback) => {
-                callback();
-            },
-            value: '',
-            setAttribute: (attr, value) => {
-                return;
-            },
-            removeAttribute: (attr) => {
-                return;
-            },
-            innerHTML: '',
-            append: (element) => {
-                return;
-            },
-            classList: {
-                add: (className) => {
-                    return;
-                },
-                remove: (className) => {
-                    return;
-                }
-            }
-        };
-    },
-    querySelectorAll: (selector) => {
-        return [{
-            innerHTML: ''
-        }];
-    }
-};
-let fetch = (url, options) => {
-    return new Promise((resolve, reject) => {
-        resolve({
-            json: () => {
-                return [];
-            }
-        });
-    });
-};
-
-
 
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
@@ -211,26 +140,8 @@ const renderNoteList = async (notes) => {
 
   // Returns HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
-    
-    function createElement(tagName) {
-        return document.createElement(tagName);
-    }
-
-  if (jsonNotes.length === 0) {
-      noteListItems.push(createLi('No saved Notes', false));
-  }
-
-  jsonNotes.forEach((note) => {
-      const li = createLi(note.title);
-      li.dataset.note = JSON.stringify(note);
-
-      noteListItems.push(li);
-  });
-
-  if (window.location.pathname === '/notes') {
-      noteListItems.forEach((note) => noteList[0].append(note));
-  }
-};
+    const liEl = document.createElement('li');
+    liEl.classList.add('list-group-item');
 
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
@@ -270,7 +181,7 @@ const renderNoteList = async (notes) => {
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
-
+};
 
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
