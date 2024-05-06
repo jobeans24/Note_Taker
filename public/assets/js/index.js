@@ -1,5 +1,3 @@
-const router = require('express').Router();
-
 let noteForm;
 let noteTitle;
 let noteText;
