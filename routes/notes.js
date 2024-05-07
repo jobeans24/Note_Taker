@@ -1,27 +1,47 @@
 const router = require('express').Router();
 const path = require('path');
 const {notes} = require('../db/db.json');
+const { v4: uuid } = require('uuid');
+
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+}
+);
 
 router.get('/notes', (req, res) => {
-    let results = notes;
-    res.json(results);
-});
+    res.sendFile(path.join(__dirname, '../public/notes.html'));
+}
+);
 
-router.post('/notes', (req, res) => {
-    req.body.id = uuidv4();
-    if (!validateNote(req.body)) {
-        res.status(400).send('The note is not properly formatted.');
+router.get('/api/notes', (req, res) => {
+    res.json(notes);
+}
+);
+
+router.post('/api/notes', (req, res) => {
+    const {title, text} = req.body;
+    if (req.body) {
+        const newNote = {
+            title,
+            text,
+            id: uuid()
+        };
+        notes.push(newNote);
+        res.json(newNote);
     } else {
-        const note = createNewNote(req.body, notes);
-        res.json(note);
+        res.json('Error in posting feedback');
     }
-});
+}
+);
 
-router.delete('/notes/:id', (req, res) => {
-    const note = deleteNote(req.params.id, notes);
-    res.json(note);
-});
+router.delete('/api/notes/:id', (req, res) => {
+    const noteId = req.params.id;
+    notes.splice(noteId, 1);
+    res.json('Note deleted');
+}
+);
 
 module.exports = router;
+
 
  

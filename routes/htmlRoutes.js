@@ -1,17 +1,19 @@
+const { join } = require('path');
+const notes = require('../db/db.json');
+const { v4: uuid } = require('uuid');
 const routes = require('express').Router();
-const path = require('path');
-const fs = require('fs');
-const { notes } = require('../db/db.json');
+const clog = require('../middleware/clog.js');
+
 
 // GET Route for homepage
 routes.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '../public/index.html'))
-);
+    res.sendFile(join(__dirname, '../public/index.html'))
+    );
 
 // GET Route for notes page
 routes.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, '../public/notes.html'))
-);
+    res.sendFile(join(__dirname, '../public/notes.html'))
+    );
 
 // GET Route for all notes
 routes.get('/api/notes', (req, res) => {
@@ -25,7 +27,7 @@ routes.post('/api/notes', (req, res) => {
     const newNote = {
       title,
       text,
-      id: notes.length,
+      id: uuid()
     };
     notes.push(newNote);
     res.json(newNote);
@@ -39,6 +41,9 @@ routes.delete('/api/notes/:id', (req, res) => {
   const noteId = req.params.id;
   notes.splice(noteId, 1);
   res.json('Note deleted');
-});
+}
+);
 
 module.exports = routes;
+
+

@@ -4,7 +4,7 @@ const path = require('path');
 const clog = require('./middleware/clog.js');
 const fs = require('./helpers/fsUtils');
 const apiRoutes = require('./routes/notes.js');
-const htmlRoutes = require('./routes/htmlRoutes.js');
+const htmlRoutes = require('./routes/htmlRoutes.js').default;
 
 const PORT = process.env.PORT || 3001;
 
